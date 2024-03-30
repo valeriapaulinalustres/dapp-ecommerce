@@ -51,8 +51,9 @@ describe("Dappecommerce", () => {
 
 
     beforeEach(async () => {
+      //List an item
         transaction =   await dappecommerce.connect(deployer).list(
-            1,
+            ID,
             NAME,
             CATEGORY,
             IMAGE,
@@ -61,12 +62,50 @@ describe("Dappecommerce", () => {
             STOCK
             )
             await transaction.wait()
+
+            //Buy an item
+            transaction = await dappecommerce.connect(buyer).buy(ID, {value: COST})
+          })
+          
+          it("Updates the contract balance", async ()=>{
+            const address = await dappecommerce.getAddress();//actualización de solidity para el vendedor, no para el comprador
+            //console.log('address', address)
+          const result = await ethers.provider.getBalance(address)
+          //console.log('cost', result)
+          expect(result).to.equal(COST)
+        })
+
+        it("Updates buyer´s order account", async ()=>{
+          const result = await dappecommerce.orderCount(buyer.address)
+          console.log('result', result)
+          expect(result).to.equal(1)
+        })
+
+        it("Adds the order", async ()=>{
+          const order = await dappecommerce.orders(buyer.address,1)
+          console.log('order', order)
+          //expect(order.time).to.be.greaterThan(0)
+          expect(order.item.name).to.equal(NAME)
+        })
+
+        it("Emits buy event", ()=>{
+          expect(transaction).to.emit(dappecommerce, "Buy")
         })
         
         it("Returns item attributes", async () => {
             const item = await dappecommerce.items(1) 
-            expect(item.id).to.equal(1)
-            //console.log(item)
+            expect(item.id).to.equal(ID)
+            expect(item.name).to.equal(NAME)
+            expect(item.category).to.equal(CATEGORY)
+            expect(item.image).to.equal(IMAGE)
+            expect(item.cost).to.equal(COST)
+            expect(item.rating).to.equal(RATING)
+            expect(item.stock).to.be.lessThan(STOCK)
+           // console.log(item)
       });
+
+        it("Emit list event", ()=>{
+          expect(transaction).to.emit(dappecommerce, "List")
+        })
   });
 });
