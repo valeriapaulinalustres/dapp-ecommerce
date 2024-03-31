@@ -107,4 +107,22 @@ emit Buy(msg.sender, orderCount[msg.sender], item.id);
 
  }
 //https://www.youtube.com/watch?v=X1ahXNYkpL8&ab_channel=DappUniversity
- //continuar desde minuto 1:16:40 escribir el testing de emit
+ //continuar desde minuto 1:24:21 deploy the contract to the blockchain
+
+
+
+//Deployment
+//  1. Start Hardhat node
+//  npx hardhat node
+
+// 2. Run deployment script
+// In a separate terminal execute: $ npx hardhat run ./scripts/deploy.js --network localhost
+
+// 3. Start frontend
+//  npm run start
+
+ //En metamask crear nueva red de hardhat:
+ //Hardhat
+ //http://127.0.0.1:8545/
+ //31337
+ //ETH
